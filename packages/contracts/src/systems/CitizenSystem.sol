@@ -4,7 +4,7 @@ pragma solidity >=0.8.0;
 import { System } from "@latticexyz/world/src/System.sol";
 import { Citizen } from "../codegen/Tables.sol";
 
-contract CitizensSystem is System {
+contract CitizenSystem is System {
   error InvalidCitizen();
   error CitizenAlreadyExists();
   error CityAlreadyVerified();
@@ -23,7 +23,7 @@ contract CitizensSystem is System {
     uint256 _gamePoints,
     uint256 _cityCommittedTo
   ) public {
-    if (_msgSender() != address(0)) CitizenAlreadyExists();
+    if (_msgSender() != address(0)) revert CitizenAlreadyExists();
 
     Citizen.set(_citizenId, _name, _verifiedCities, _roleAttestation, _level, _gamePoints, _cityCommittedTo);
   }
@@ -47,7 +47,7 @@ contract CitizensSystem is System {
     // Level 0 citizens cannot change their committed city
     uint256 cityCommittedTo = Citizen.getCityCommittedTo(_citizenId);
     uint256 level = Citizen.getLevel(_citizenId);
-    if (cityCommittedTo != 0 && level == 0) CannotCommitToCity();
+    if (cityCommittedTo != 0 && level == 0) revert CannotCommitToCity();
 
     Citizen.setCityCommittedTo(_citizenId, _cityId);
     incrementGamePoints(_citizenId);
@@ -57,7 +57,7 @@ contract CitizensSystem is System {
     if (_msgSender() != _citizenId) revert InvalidCitizen();
 
     uint256 level = Citizen.getLevel(_citizenId);
-    if (level == 0) CannotClaimReward();
+    if (level == 0) revert CannotClaimReward();
     
     // Check citizenId token balance
     // Transfer tokens to citizenId
