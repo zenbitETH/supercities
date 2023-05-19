@@ -1,4 +1,5 @@
 import ReactDOM from "react-dom/client";
+import "./styles/index.css"
 import { mount as mountDevTools } from "@latticexyz/dev-tools";
 import { App } from "./App";
 import { setup } from "./mud/setup";

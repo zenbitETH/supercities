@@ -12,10 +12,11 @@ export const App = () => {
 
   return (
     <>
-      <div>
+      <div className="text-2xl text-red-500">
         Counter: <span>{counter?.value ?? "??"}</span>
       </div>
       <button
+        className=""
         type="button"
         onClick={async (event) => {
           event.preventDefault();
