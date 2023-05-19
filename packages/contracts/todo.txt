@@ -1,0 +1,21 @@
+1
+Add a mapping to the Cities table 
+mapping(uint256 cityId => mapping(address citizenId => bool)) public hasCitizenVerifedCity
+if (Cities.hasCitizenVerifiedCity(_citizenId, _cityId)) CityAlreadyVerified();
+
+2
+Cities.setHasCitizenVerifiedCity(_citizenId, _cityId) = true;
+
+
+3
+When setting up IDs for cities in the Cities table:
+Do not allow a cityId to have a value of zero.  This would mess up a security check in CitizenSystem.commitToCity()
+
+4
+Citizen.claimReward()
+Finish the code for transfering tokens to the citizenId
+
+5
+Create the ERC20 token
+
+
