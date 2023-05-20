@@ -17,10 +17,10 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("Proposal")));
-bytes32 constant ProposalTableId = _tableId;
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("Proposals")));
+bytes32 constant ProposalsTableId = _tableId;
 
-struct ProposalData {
+struct ProposalsData {
   address citizen;
   uint256 proposalTime;
   uint256 upvotes;
@@ -29,7 +29,7 @@ struct ProposalData {
   string country;
 }
 
-library Proposal {
+library Proposals {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](6);
@@ -59,7 +59,7 @@ library Proposal {
     _fieldNames[3] = "downvotes";
     _fieldNames[4] = "city";
     _fieldNames[5] = "country";
-    return ("Proposal", _fieldNames);
+    return ("Proposals", _fieldNames);
   }
 
   /** Register the table's schema */
@@ -457,7 +457,7 @@ library Proposal {
   }
 
   /** Get the full data */
-  function get(uint256 proposalId) internal view returns (ProposalData memory _table) {
+  function get(uint256 proposalId) internal view returns (ProposalsData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((proposalId)));
 
@@ -466,7 +466,7 @@ library Proposal {
   }
 
   /** Get the full data (using the specified store) */
-  function get(IStore _store, uint256 proposalId) internal view returns (ProposalData memory _table) {
+  function get(IStore _store, uint256 proposalId) internal view returns (ProposalsData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((proposalId)));
 
@@ -512,12 +512,12 @@ library Proposal {
   }
 
   /** Set the full data using the data struct */
-  function set(uint256 proposalId, ProposalData memory _table) internal {
+  function set(uint256 proposalId, ProposalsData memory _table) internal {
     set(proposalId, _table.citizen, _table.proposalTime, _table.upvotes, _table.downvotes, _table.city, _table.country);
   }
 
   /** Set the full data using the data struct (using the specified store) */
-  function set(IStore _store, uint256 proposalId, ProposalData memory _table) internal {
+  function set(IStore _store, uint256 proposalId, ProposalsData memory _table) internal {
     set(
       _store,
       proposalId,
@@ -531,7 +531,7 @@ library Proposal {
   }
 
   /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob) internal view returns (ProposalData memory _table) {
+  function decode(bytes memory _blob) internal view returns (ProposalsData memory _table) {
     // 116 is the total byte length of static data
     PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 116));
 

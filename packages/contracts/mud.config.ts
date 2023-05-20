@@ -22,7 +22,7 @@ export default mudConfig({
       schema: "uint256",
       keySchema: {}
     },
-    Proposal: {
+    Proposals: {
       schema: {
         citizen: "address",
         proposalTime: "uint256",
@@ -38,6 +38,15 @@ export default mudConfig({
     ProposalCounter: {
       schema: "uint256",
       keySchema: {}
+    },
+    Voting: {
+      schema: {
+        hasVoted: "bool"
+      },
+      keySchema: {
+        proposalId: "uint256",
+        citizen: "address"
+      }
     },
     Cities: {
       schema :{

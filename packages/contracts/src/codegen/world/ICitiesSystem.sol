@@ -5,10 +5,14 @@ pragma solidity >=0.8.0;
 
 interface ICitiesSystem {
   error UnregisteredCitizen();
+  error AlreadyVoted();
+  error ExpiredVotingPeriod();
 
   function proposeCity(address _citizen, string memory _city, string memory _country) external;
 
   function upvote(uint256 _proposalId) external;
+
+  function downvote(uint256 _proposalId) external;
 
   function addCity() external;
 }

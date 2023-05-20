@@ -2,10 +2,12 @@
 pragma solidity >=0.8.0;
 
 import { System } from "@latticexyz/world/src/System.sol";
-import { Cities, Proposal, ProposalCounter, Citizens, CitizensCounter } from "../codegen/Tables.sol";
+import { Cities, Proposals, ProposalCounter, Citizens, CitizensCounter, Voting } from "../codegen/Tables.sol";
 
 contract CitiesSystem is System {
   error UnregisteredCitizen();
+  error AlreadyVoted();
+  error ExpiredVotingPeriod();
 
   // ---------------------------------- //
   //             Public                 //
@@ -16,15 +18,30 @@ contract CitiesSystem is System {
     if (Citizens.getCitizenId(_msgSender()) < 1) revert UnregisteredCitizen();
     uint256 proposalId = incrementProposalCounter();
 
-    Proposal.set(proposalId, _citizen, block.timestamp, 0, 0, _city, _country);
+    Proposals.set(proposalId, _citizen, block.timestamp, 0, 0, _city, _country);
   }
 
   function upvote(uint256 _proposalId) public {
     if (Citizens.getCitizenId(_msgSender()) < 1) revert UnregisteredCitizen();
-    
+    if (Voting.get(_proposalId, _msgSender())) revert AlreadyVoted();
+
+    uint256 upvotes = Proposals.getUpvotes(_proposalId);
+    uint256 newUpvotes = upvotes++;
+    Proposals.setUpvotes(_proposalId, newUpvotes);
+    // Prevent the same citizen from voting on the same proposal twice
+    Voting.set(_proposalId, _msgSender(), true);
   }
 
+  function downvote(uint256 _proposalId) public {
+    if (Citizens.getCitizenId(_msgSender()) < 1) revert UnregisteredCitizen();
+    if (Voting.get(_proposalId, _msgSender())) revert AlreadyVoted();
 
+    uint256 downvotes = Proposals.getDownvotes(_proposalId);
+    uint256 newDownvotes = downvotes++;
+    Proposals.setDownvotes(_proposalId, newDownvotes);
+    // Prevent the same citizen from voting on the same proposal twice
+    Voting.set(_proposalId, _msgSender(), true);
+  }
 
 
 
@@ -33,6 +50,9 @@ contract CitiesSystem is System {
     // must have 3 upvotes
     // must have more upvotes than downvotes
     // anyone can call this function
+
+
+    
   }
 
 

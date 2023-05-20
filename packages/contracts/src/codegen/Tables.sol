@@ -5,6 +5,7 @@ pragma solidity >=0.8.0;
 
 import { Citizens, CitizensData, CitizensTableId } from "./tables/Citizens.sol";
 import { CitizensCounter, CitizensCounterTableId } from "./tables/CitizensCounter.sol";
-import { Proposal, ProposalData, ProposalTableId } from "./tables/Proposal.sol";
+import { Proposals, ProposalsData, ProposalsTableId } from "./tables/Proposals.sol";
 import { ProposalCounter, ProposalCounterTableId } from "./tables/ProposalCounter.sol";
+import { Voting, VotingTableId } from "./tables/Voting.sol";
 import { Cities, CitiesData, CitiesTableId } from "./tables/Cities.sol";
