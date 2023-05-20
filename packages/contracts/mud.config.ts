@@ -12,7 +12,8 @@ export default mudConfig({
         gamePoints: "uint256",
         cityCommittedTo: "uint256",
         name: "string",
-        roleAttestation: "string"
+        roleAttestation: "string",
+        proposedCites: "uint256[]"
       },
       keySchema: {
         citizen: "address",
@@ -39,6 +40,10 @@ export default mudConfig({
       schema: "uint256",
       keySchema: {}
     },
+    CitiesCounter: {
+      schema: "uint256",
+      keySchema: {}
+    },
     Voting: {
       schema: {
         hasVoted: "bool"
@@ -50,6 +55,7 @@ export default mudConfig({
     },
     Cities: {
       schema :{
+        proposer: "address",
         city: "string",
         country: "string"
       },

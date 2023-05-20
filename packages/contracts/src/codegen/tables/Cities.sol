@@ -21,6 +21,7 @@ bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("Citie
 bytes32 constant CitiesTableId = _tableId;
 
 struct CitiesData {
+  address proposer;
   string city;
   string country;
 }
@@ -28,9 +29,10 @@ struct CitiesData {
 library Cities {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](2);
-    _schema[0] = SchemaType.STRING;
+    SchemaType[] memory _schema = new SchemaType[](3);
+    _schema[0] = SchemaType.ADDRESS;
     _schema[1] = SchemaType.STRING;
+    _schema[2] = SchemaType.STRING;
 
     return SchemaLib.encode(_schema);
   }
@@ -44,9 +46,10 @@ library Cities {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](2);
-    _fieldNames[0] = "city";
-    _fieldNames[1] = "country";
+    string[] memory _fieldNames = new string[](3);
+    _fieldNames[0] = "proposer";
+    _fieldNames[1] = "city";
+    _fieldNames[2] = "country";
     return ("Cities", _fieldNames);
   }
 
@@ -72,12 +75,46 @@ library Cities {
     _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
+  /** Get proposer */
+  function getProposer(uint256 cityId) internal view returns (address proposer) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(uint256((cityId)));
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
+    return (address(Bytes.slice20(_blob, 0)));
+  }
+
+  /** Get proposer (using the specified store) */
+  function getProposer(IStore _store, uint256 cityId) internal view returns (address proposer) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(uint256((cityId)));
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
+    return (address(Bytes.slice20(_blob, 0)));
+  }
+
+  /** Set proposer */
+  function setProposer(uint256 cityId, address proposer) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(uint256((cityId)));
+
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((proposer)));
+  }
+
+  /** Set proposer (using the specified store) */
+  function setProposer(IStore _store, uint256 cityId, address proposer) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(uint256((cityId)));
+
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((proposer)));
+  }
+
   /** Get city */
   function getCity(uint256 cityId) internal view returns (string memory city) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
     return (string(_blob));
   }
 
@@ -86,7 +123,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
     return (string(_blob));
   }
 
@@ -95,7 +132,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 0, bytes((city)));
+    StoreSwitch.setField(_tableId, _keyTuple, 1, bytes((city)));
   }
 
   /** Set city (using the specified store) */
@@ -103,7 +140,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    _store.setField(_tableId, _keyTuple, 0, bytes((city)));
+    _store.setField(_tableId, _keyTuple, 1, bytes((city)));
   }
 
   /** Get the length of city */
@@ -111,7 +148,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 0, getSchema());
+    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 1, getSchema());
     return _byteLength / 1;
   }
 
@@ -120,7 +157,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 0, getSchema());
+    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 1, getSchema());
     return _byteLength / 1;
   }
 
@@ -129,7 +166,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 0, getSchema(), _index * 1, (_index + 1) * 1);
+    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 1, getSchema(), _index * 1, (_index + 1) * 1);
     return (string(_blob));
   }
 
@@ -138,7 +175,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 0, getSchema(), _index * 1, (_index + 1) * 1);
+    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 1, getSchema(), _index * 1, (_index + 1) * 1);
     return (string(_blob));
   }
 
@@ -147,7 +184,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    StoreSwitch.pushToField(_tableId, _keyTuple, 0, bytes((_slice)));
+    StoreSwitch.pushToField(_tableId, _keyTuple, 1, bytes((_slice)));
   }
 
   /** Push a slice to city (using the specified store) */
@@ -155,7 +192,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    _store.pushToField(_tableId, _keyTuple, 0, bytes((_slice)));
+    _store.pushToField(_tableId, _keyTuple, 1, bytes((_slice)));
   }
 
   /** Pop a slice from city */
@@ -163,7 +200,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    StoreSwitch.popFromField(_tableId, _keyTuple, 0, 1);
+    StoreSwitch.popFromField(_tableId, _keyTuple, 1, 1);
   }
 
   /** Pop a slice from city (using the specified store) */
@@ -171,7 +208,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    _store.popFromField(_tableId, _keyTuple, 0, 1);
+    _store.popFromField(_tableId, _keyTuple, 1, 1);
   }
 
   /** Update a slice of city at `_index` */
@@ -179,7 +216,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    StoreSwitch.updateInField(_tableId, _keyTuple, 0, _index * 1, bytes((_slice)));
+    StoreSwitch.updateInField(_tableId, _keyTuple, 1, _index * 1, bytes((_slice)));
   }
 
   /** Update a slice of city (using the specified store) at `_index` */
@@ -187,7 +224,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    _store.updateInField(_tableId, _keyTuple, 0, _index * 1, bytes((_slice)));
+    _store.updateInField(_tableId, _keyTuple, 1, _index * 1, bytes((_slice)));
   }
 
   /** Get country */
@@ -195,7 +232,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
     return (string(_blob));
   }
 
@@ -204,7 +241,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
     return (string(_blob));
   }
 
@@ -213,7 +250,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 1, bytes((country)));
+    StoreSwitch.setField(_tableId, _keyTuple, 2, bytes((country)));
   }
 
   /** Set country (using the specified store) */
@@ -221,7 +258,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    _store.setField(_tableId, _keyTuple, 1, bytes((country)));
+    _store.setField(_tableId, _keyTuple, 2, bytes((country)));
   }
 
   /** Get the length of country */
@@ -229,7 +266,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 1, getSchema());
+    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 2, getSchema());
     return _byteLength / 1;
   }
 
@@ -238,7 +275,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 1, getSchema());
+    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 2, getSchema());
     return _byteLength / 1;
   }
 
@@ -247,7 +284,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 1, getSchema(), _index * 1, (_index + 1) * 1);
+    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 2, getSchema(), _index * 1, (_index + 1) * 1);
     return (string(_blob));
   }
 
@@ -256,7 +293,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 1, getSchema(), _index * 1, (_index + 1) * 1);
+    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 2, getSchema(), _index * 1, (_index + 1) * 1);
     return (string(_blob));
   }
 
@@ -265,7 +302,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    StoreSwitch.pushToField(_tableId, _keyTuple, 1, bytes((_slice)));
+    StoreSwitch.pushToField(_tableId, _keyTuple, 2, bytes((_slice)));
   }
 
   /** Push a slice to country (using the specified store) */
@@ -273,7 +310,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    _store.pushToField(_tableId, _keyTuple, 1, bytes((_slice)));
+    _store.pushToField(_tableId, _keyTuple, 2, bytes((_slice)));
   }
 
   /** Pop a slice from country */
@@ -281,7 +318,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    StoreSwitch.popFromField(_tableId, _keyTuple, 1, 1);
+    StoreSwitch.popFromField(_tableId, _keyTuple, 2, 1);
   }
 
   /** Pop a slice from country (using the specified store) */
@@ -289,7 +326,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    _store.popFromField(_tableId, _keyTuple, 1, 1);
+    _store.popFromField(_tableId, _keyTuple, 2, 1);
   }
 
   /** Update a slice of country at `_index` */
@@ -297,7 +334,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    StoreSwitch.updateInField(_tableId, _keyTuple, 1, _index * 1, bytes((_slice)));
+    StoreSwitch.updateInField(_tableId, _keyTuple, 2, _index * 1, bytes((_slice)));
   }
 
   /** Update a slice of country (using the specified store) at `_index` */
@@ -305,7 +342,7 @@ library Cities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
 
-    _store.updateInField(_tableId, _keyTuple, 1, _index * 1, bytes((_slice)));
+    _store.updateInField(_tableId, _keyTuple, 2, _index * 1, bytes((_slice)));
   }
 
   /** Get the full data */
@@ -327,8 +364,8 @@ library Cities {
   }
 
   /** Set the full data using individual values */
-  function set(uint256 cityId, string memory city, string memory country) internal {
-    bytes memory _data = encode(city, country);
+  function set(uint256 cityId, address proposer, string memory city, string memory country) internal {
+    bytes memory _data = encode(proposer, city, country);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
@@ -337,8 +374,8 @@ library Cities {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(IStore _store, uint256 cityId, string memory city, string memory country) internal {
-    bytes memory _data = encode(city, country);
+  function set(IStore _store, uint256 cityId, address proposer, string memory city, string memory country) internal {
+    bytes memory _data = encode(proposer, city, country);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
@@ -348,24 +385,26 @@ library Cities {
 
   /** Set the full data using the data struct */
   function set(uint256 cityId, CitiesData memory _table) internal {
-    set(cityId, _table.city, _table.country);
+    set(cityId, _table.proposer, _table.city, _table.country);
   }
 
   /** Set the full data using the data struct (using the specified store) */
   function set(IStore _store, uint256 cityId, CitiesData memory _table) internal {
-    set(_store, cityId, _table.city, _table.country);
+    set(_store, cityId, _table.proposer, _table.city, _table.country);
   }
 
   /** Decode the tightly packed blob using this table's schema */
   function decode(bytes memory _blob) internal view returns (CitiesData memory _table) {
-    // 0 is the total byte length of static data
-    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 0));
+    // 20 is the total byte length of static data
+    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 20));
+
+    _table.proposer = (address(Bytes.slice20(_blob, 0)));
 
     // Store trims the blob if dynamic fields are all empty
-    if (_blob.length > 0) {
+    if (_blob.length > 20) {
       uint256 _start;
       // skip static data length + dynamic lengths word
-      uint256 _end = 32;
+      uint256 _end = 52;
 
       _start = _end;
       _end += _encodedLengths.atIndex(0);
@@ -378,13 +417,13 @@ library Cities {
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(string memory city, string memory country) internal view returns (bytes memory) {
+  function encode(address proposer, string memory city, string memory country) internal view returns (bytes memory) {
     uint40[] memory _counters = new uint40[](2);
     _counters[0] = uint40(bytes(city).length);
     _counters[1] = uint40(bytes(country).length);
     PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);
 
-    return abi.encodePacked(_encodedLengths.unwrap(), bytes((city)), bytes((country)));
+    return abi.encodePacked(proposer, _encodedLengths.unwrap(), bytes((city)), bytes((country)));
   }
 
   /** Encode keys as a bytes32 array using this table's schema */

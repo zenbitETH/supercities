@@ -39,7 +39,7 @@ contract CitizensTest is MudV2Test {
   function testAddCitizen() public {
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
     vm.startBroadcast(deployerPrivateKey);
-    // IWorld(worldAddress).addCitizen(vm.addr(deployerPrivateKey), 0, 0, 0, 0, "", "TEST_ROLE");
+    // IWorld(worldAddress).addCitizen(vm.addr(deployerPrivateKey), 0, 0, 0, 0, "", "TEST_ROLE", []);
 
     address deployerAddress = vm.addr(deployerPrivateKey);
 

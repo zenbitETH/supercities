@@ -18,3 +18,8 @@ Finish the code for transfering tokens to the citizenId
 5
 Create the ERC20 token
 
+6
+CitiesSystem.addCity
+Reward proposer with erc20 tokens 
+
+

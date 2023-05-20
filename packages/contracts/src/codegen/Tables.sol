@@ -7,5 +7,6 @@ import { Citizens, CitizensData, CitizensTableId } from "./tables/Citizens.sol";
 import { CitizensCounter, CitizensCounterTableId } from "./tables/CitizensCounter.sol";
 import { Proposals, ProposalsData, ProposalsTableId } from "./tables/Proposals.sol";
 import { ProposalCounter, ProposalCounterTableId } from "./tables/ProposalCounter.sol";
+import { CitiesCounter, CitiesCounterTableId } from "./tables/CitiesCounter.sol";
 import { Voting, VotingTableId } from "./tables/Voting.sol";
 import { Cities, CitiesData, CitiesTableId } from "./tables/Cities.sol";

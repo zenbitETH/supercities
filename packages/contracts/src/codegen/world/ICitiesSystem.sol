@@ -7,6 +7,8 @@ interface ICitiesSystem {
   error UnregisteredCitizen();
   error AlreadyVoted();
   error ExpiredVotingPeriod();
+  error InsufficientUpvotes();
+  error DownvotesExceedUpvotes();
 
   function proposeCity(address _citizen, string memory _city, string memory _country) external;
 
@@ -14,5 +16,5 @@ interface ICitiesSystem {
 
   function downvote(uint256 _proposalId) external;
 
-  function addCity() external;
+  function addCity(uint256 _proposalId) external;
 }

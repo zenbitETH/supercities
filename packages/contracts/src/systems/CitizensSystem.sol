@@ -34,7 +34,7 @@ contract CitizensSystem is System {
     if (_cityCommittedTo != 0) revert InvalidCityCommittedTo();
 
     uint256 citizenId = incrementCitizensCounter();
-    Citizens.set(_citizen, citizenId, _verifiedCities, _level, _gamePoints, _cityCommittedTo, _name, _roleAttestation);
+    Citizens.set(_citizen, citizenId, _verifiedCities, _level, _gamePoints, _cityCommittedTo, _name, _roleAttestation, []);
   }
 
   function verifyCity(address _citizen, uint256 _cityId) public {
