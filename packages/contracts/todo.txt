@@ -18,4 +18,3 @@ Finish the code for transfering tokens to the citizenId
 5
 Create the ERC20 token
 
-

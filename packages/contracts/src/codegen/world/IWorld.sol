@@ -5,12 +5,13 @@ pragma solidity >=0.8.0;
 
 import { IBaseWorld } from "@latticexyz/world/src/interfaces/IBaseWorld.sol";
 
-import { ICitizenSystem } from "./ICitizenSystem.sol";
+import { ICitiesSystem } from "./ICitiesSystem.sol";
+import { ICitizensSystem } from "./ICitizensSystem.sol";
 
 /**
  * The IWorld interface includes all systems dynamically added to the World
  * during the deploy process.
  */
-interface IWorld is IBaseWorld, ICitizenSystem {
+interface IWorld is IBaseWorld, ICitiesSystem, ICitizensSystem {
 
 }

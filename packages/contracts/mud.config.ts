@@ -4,17 +4,37 @@ import "@latticexyz/world/snapsync";
 export default mudConfig({
   snapSync: true,
   tables: {
-    Citizen: {
+    Citizens: {
       schema: {
-        name: "string",
         verifiedCities: "uint256",
-        roleAttestation: "string",
         level: "uint256",
         gamePoints: "uint256",
-        cityCommittedTo: "uint256"
+        cityCommittedTo: "uint256",
+        name: "string",
+        roleAttestation: "string"
       },
       keySchema: {
-        citizenId: "address",
+        citizen: "address",
+      }
+    },
+    Proposal: {
+      schema: {
+        citizen: "address",
+        proposalTime: "uint256",
+        city: "string",
+        country: "string"
+      },
+      keySchema: {
+        proposalId: "uint256"
+      }
+    },
+    Cities: {
+      schema :{
+        city: "string",
+        country: "string"
+      },
+      keySchema: {
+        cityId: "uint256"
       }
     }
   },
