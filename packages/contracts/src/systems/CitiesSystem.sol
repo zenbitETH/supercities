@@ -15,12 +15,12 @@ contract CitiesSystem is System {
   //             Public                 //
   // ---------------------------------- //
   /// @notice Registered citizens may propose new cities that will be voted on by other citizens
-  function proposeCity(address _citizen, string memory _city, string memory _country) public {
+  function proposeCity(string memory _city, string memory _country) public {
     // Check that proposer is a registered citizen
     if (Citizens.getCitizenId(_msgSender()) < 1) revert UnregisteredCitizen();
     uint256 proposalId = incrementProposalCounter();
 
-    Proposals.set(proposalId, _citizen, block.timestamp, 0, 0, _city, _country);
+    Proposals.set(proposalId, _msgSender(), block.timestamp, 0, 0, _city, _country);
   }
 
   function upvote(uint256 _proposalId) public {
@@ -63,10 +63,10 @@ contract CitiesSystem is System {
     uint256 currentCityId = CitiesCounter.get();
     uint256 newCityId = currentCityId++;
     address proposer = Proposals.getCitizen(_proposalId);
-    Cities.set(newCityId, proposer, city, country);
+    Cities.set(newCityId, proposer, city, country, []);
 
     CitiesCounter.set(newCityId);
-
+    Cities.pushCommittedCitizens(_proposalId, proposer);
     Citizens.pushProposedCites(proposer, newCityId);
 
     // REWARD PROPOSER WITH TOKENS

@@ -10,7 +10,7 @@ interface ICitiesSystem {
   error InsufficientUpvotes();
   error DownvotesExceedUpvotes();
 
-  function proposeCity(address _citizen, string memory _city, string memory _country) external;
+  function proposeCity(string memory _city, string memory _country) external;
 
   function upvote(uint256 _proposalId) external;
 

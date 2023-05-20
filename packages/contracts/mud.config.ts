@@ -57,7 +57,8 @@ export default mudConfig({
       schema :{
         proposer: "address",
         city: "string",
-        country: "string"
+        country: "string",
+        committedCitizens: "address[]"
       },
       keySchema: {
         cityId: "uint256"
