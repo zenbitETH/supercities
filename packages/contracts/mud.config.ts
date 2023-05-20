@@ -6,6 +6,7 @@ export default mudConfig({
   tables: {
     Citizens: {
       schema: {
+        citizenId: "uint256",
         verifiedCities: "uint256",
         level: "uint256",
         gamePoints: "uint256",
@@ -17,16 +18,26 @@ export default mudConfig({
         citizen: "address",
       }
     },
+    CitizensCounter: {
+      schema: "uint256",
+      keySchema: {}
+    },
     Proposal: {
       schema: {
         citizen: "address",
         proposalTime: "uint256",
+        upvotes: "uint256",
+        downvotes: "uint256",
         city: "string",
         country: "string"
       },
       keySchema: {
         proposalId: "uint256"
       }
+    },
+    ProposalCounter: {
+      schema: "uint256",
+      keySchema: {}
     },
     Cities: {
       schema :{

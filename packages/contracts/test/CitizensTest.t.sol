@@ -6,7 +6,7 @@ import { MudV2Test } from "@latticexyz/std-contracts/src/test/MudV2Test.t.sol";
 import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
-import { Citizen, CitizenTableId } from "../src/codegen/Tables.sol";
+import { Citizens, CitizensTableId } from "../src/codegen/Tables.sol";
 
 contract CitizensTest is MudV2Test {
   IWorld public world;
@@ -43,7 +43,7 @@ contract CitizensTest is MudV2Test {
 
     address deployerAddress = vm.addr(deployerPrivateKey);
 
-    string memory role = Citizen.getRoleAttestation(deployerAddress);
+    string memory role = Citizens.getRoleAttestation(deployerAddress);
     vm.stopBroadcast();
     // assertEq(role, "TEST_ROLE");
 

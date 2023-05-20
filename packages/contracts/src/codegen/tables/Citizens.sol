@@ -21,6 +21,7 @@ bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("Citiz
 bytes32 constant CitizensTableId = _tableId;
 
 struct CitizensData {
+  uint256 citizenId;
   uint256 verifiedCities;
   uint256 level;
   uint256 gamePoints;
@@ -32,13 +33,14 @@ struct CitizensData {
 library Citizens {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](6);
+    SchemaType[] memory _schema = new SchemaType[](7);
     _schema[0] = SchemaType.UINT256;
     _schema[1] = SchemaType.UINT256;
     _schema[2] = SchemaType.UINT256;
     _schema[3] = SchemaType.UINT256;
-    _schema[4] = SchemaType.STRING;
+    _schema[4] = SchemaType.UINT256;
     _schema[5] = SchemaType.STRING;
+    _schema[6] = SchemaType.STRING;
 
     return SchemaLib.encode(_schema);
   }
@@ -52,13 +54,14 @@ library Citizens {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](6);
-    _fieldNames[0] = "verifiedCities";
-    _fieldNames[1] = "level";
-    _fieldNames[2] = "gamePoints";
-    _fieldNames[3] = "cityCommittedTo";
-    _fieldNames[4] = "name";
-    _fieldNames[5] = "roleAttestation";
+    string[] memory _fieldNames = new string[](7);
+    _fieldNames[0] = "citizenId";
+    _fieldNames[1] = "verifiedCities";
+    _fieldNames[2] = "level";
+    _fieldNames[3] = "gamePoints";
+    _fieldNames[4] = "cityCommittedTo";
+    _fieldNames[5] = "name";
+    _fieldNames[6] = "roleAttestation";
     return ("Citizens", _fieldNames);
   }
 
@@ -84,12 +87,46 @@ library Citizens {
     _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
+  /** Get citizenId */
+  function getCitizenId(address citizen) internal view returns (uint256 citizenId) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(uint256(uint160((citizen))));
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
+    return (uint256(Bytes.slice32(_blob, 0)));
+  }
+
+  /** Get citizenId (using the specified store) */
+  function getCitizenId(IStore _store, address citizen) internal view returns (uint256 citizenId) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(uint256(uint160((citizen))));
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
+    return (uint256(Bytes.slice32(_blob, 0)));
+  }
+
+  /** Set citizenId */
+  function setCitizenId(address citizen, uint256 citizenId) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(uint256(uint160((citizen))));
+
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((citizenId)));
+  }
+
+  /** Set citizenId (using the specified store) */
+  function setCitizenId(IStore _store, address citizen, uint256 citizenId) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(uint256(uint160((citizen))));
+
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((citizenId)));
+  }
+
   /** Get verifiedCities */
   function getVerifiedCities(address citizen) internal view returns (uint256 verifiedCities) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
@@ -98,7 +135,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
@@ -107,7 +144,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((verifiedCities)));
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((verifiedCities)));
   }
 
   /** Set verifiedCities (using the specified store) */
@@ -115,7 +152,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((verifiedCities)));
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((verifiedCities)));
   }
 
   /** Get level */
@@ -123,7 +160,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
@@ -132,7 +169,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
@@ -141,7 +178,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((level)));
+    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((level)));
   }
 
   /** Set level (using the specified store) */
@@ -149,7 +186,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((level)));
+    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((level)));
   }
 
   /** Get gamePoints */
@@ -157,7 +194,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
@@ -166,7 +203,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
@@ -175,7 +212,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((gamePoints)));
+    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked((gamePoints)));
   }
 
   /** Set gamePoints (using the specified store) */
@@ -183,7 +220,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((gamePoints)));
+    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((gamePoints)));
   }
 
   /** Get cityCommittedTo */
@@ -191,7 +228,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
@@ -200,7 +237,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
@@ -209,7 +246,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked((cityCommittedTo)));
+    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((cityCommittedTo)));
   }
 
   /** Set cityCommittedTo (using the specified store) */
@@ -217,7 +254,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((cityCommittedTo)));
+    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((cityCommittedTo)));
   }
 
   /** Get name */
@@ -225,7 +262,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5);
     return (string(_blob));
   }
 
@@ -234,7 +271,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5);
     return (string(_blob));
   }
 
@@ -243,7 +280,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 4, bytes((name)));
+    StoreSwitch.setField(_tableId, _keyTuple, 5, bytes((name)));
   }
 
   /** Set name (using the specified store) */
@@ -251,7 +288,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.setField(_tableId, _keyTuple, 4, bytes((name)));
+    _store.setField(_tableId, _keyTuple, 5, bytes((name)));
   }
 
   /** Get the length of name */
@@ -259,7 +296,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 4, getSchema());
+    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 5, getSchema());
     return _byteLength / 1;
   }
 
@@ -268,7 +305,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 4, getSchema());
+    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 5, getSchema());
     return _byteLength / 1;
   }
 
@@ -277,7 +314,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 4, getSchema(), _index * 1, (_index + 1) * 1);
+    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 5, getSchema(), _index * 1, (_index + 1) * 1);
     return (string(_blob));
   }
 
@@ -286,7 +323,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 4, getSchema(), _index * 1, (_index + 1) * 1);
+    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 5, getSchema(), _index * 1, (_index + 1) * 1);
     return (string(_blob));
   }
 
@@ -295,7 +332,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.pushToField(_tableId, _keyTuple, 4, bytes((_slice)));
+    StoreSwitch.pushToField(_tableId, _keyTuple, 5, bytes((_slice)));
   }
 
   /** Push a slice to name (using the specified store) */
@@ -303,7 +340,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.pushToField(_tableId, _keyTuple, 4, bytes((_slice)));
+    _store.pushToField(_tableId, _keyTuple, 5, bytes((_slice)));
   }
 
   /** Pop a slice from name */
@@ -311,7 +348,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.popFromField(_tableId, _keyTuple, 4, 1);
+    StoreSwitch.popFromField(_tableId, _keyTuple, 5, 1);
   }
 
   /** Pop a slice from name (using the specified store) */
@@ -319,7 +356,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.popFromField(_tableId, _keyTuple, 4, 1);
+    _store.popFromField(_tableId, _keyTuple, 5, 1);
   }
 
   /** Update a slice of name at `_index` */
@@ -327,7 +364,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.updateInField(_tableId, _keyTuple, 4, _index * 1, bytes((_slice)));
+    StoreSwitch.updateInField(_tableId, _keyTuple, 5, _index * 1, bytes((_slice)));
   }
 
   /** Update a slice of name (using the specified store) at `_index` */
@@ -335,7 +372,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.updateInField(_tableId, _keyTuple, 4, _index * 1, bytes((_slice)));
+    _store.updateInField(_tableId, _keyTuple, 5, _index * 1, bytes((_slice)));
   }
 
   /** Get roleAttestation */
@@ -343,7 +380,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 6);
     return (string(_blob));
   }
 
@@ -352,7 +389,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 6);
     return (string(_blob));
   }
 
@@ -361,7 +398,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 5, bytes((roleAttestation)));
+    StoreSwitch.setField(_tableId, _keyTuple, 6, bytes((roleAttestation)));
   }
 
   /** Set roleAttestation (using the specified store) */
@@ -369,7 +406,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.setField(_tableId, _keyTuple, 5, bytes((roleAttestation)));
+    _store.setField(_tableId, _keyTuple, 6, bytes((roleAttestation)));
   }
 
   /** Get the length of roleAttestation */
@@ -377,7 +414,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 5, getSchema());
+    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 6, getSchema());
     return _byteLength / 1;
   }
 
@@ -386,7 +423,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 5, getSchema());
+    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 6, getSchema());
     return _byteLength / 1;
   }
 
@@ -395,7 +432,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 5, getSchema(), _index * 1, (_index + 1) * 1);
+    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 6, getSchema(), _index * 1, (_index + 1) * 1);
     return (string(_blob));
   }
 
@@ -408,7 +445,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 5, getSchema(), _index * 1, (_index + 1) * 1);
+    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 6, getSchema(), _index * 1, (_index + 1) * 1);
     return (string(_blob));
   }
 
@@ -417,7 +454,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.pushToField(_tableId, _keyTuple, 5, bytes((_slice)));
+    StoreSwitch.pushToField(_tableId, _keyTuple, 6, bytes((_slice)));
   }
 
   /** Push a slice to roleAttestation (using the specified store) */
@@ -425,7 +462,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.pushToField(_tableId, _keyTuple, 5, bytes((_slice)));
+    _store.pushToField(_tableId, _keyTuple, 6, bytes((_slice)));
   }
 
   /** Pop a slice from roleAttestation */
@@ -433,7 +470,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.popFromField(_tableId, _keyTuple, 5, 1);
+    StoreSwitch.popFromField(_tableId, _keyTuple, 6, 1);
   }
 
   /** Pop a slice from roleAttestation (using the specified store) */
@@ -441,7 +478,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.popFromField(_tableId, _keyTuple, 5, 1);
+    _store.popFromField(_tableId, _keyTuple, 6, 1);
   }
 
   /** Update a slice of roleAttestation at `_index` */
@@ -449,7 +486,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.updateInField(_tableId, _keyTuple, 5, _index * 1, bytes((_slice)));
+    StoreSwitch.updateInField(_tableId, _keyTuple, 6, _index * 1, bytes((_slice)));
   }
 
   /** Update a slice of roleAttestation (using the specified store) at `_index` */
@@ -457,7 +494,7 @@ library Citizens {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.updateInField(_tableId, _keyTuple, 5, _index * 1, bytes((_slice)));
+    _store.updateInField(_tableId, _keyTuple, 6, _index * 1, bytes((_slice)));
   }
 
   /** Get the full data */
@@ -481,6 +518,7 @@ library Citizens {
   /** Set the full data using individual values */
   function set(
     address citizen,
+    uint256 citizenId,
     uint256 verifiedCities,
     uint256 level,
     uint256 gamePoints,
@@ -488,7 +526,7 @@ library Citizens {
     string memory name,
     string memory roleAttestation
   ) internal {
-    bytes memory _data = encode(verifiedCities, level, gamePoints, cityCommittedTo, name, roleAttestation);
+    bytes memory _data = encode(citizenId, verifiedCities, level, gamePoints, cityCommittedTo, name, roleAttestation);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
@@ -500,6 +538,7 @@ library Citizens {
   function set(
     IStore _store,
     address citizen,
+    uint256 citizenId,
     uint256 verifiedCities,
     uint256 level,
     uint256 gamePoints,
@@ -507,7 +546,7 @@ library Citizens {
     string memory name,
     string memory roleAttestation
   ) internal {
-    bytes memory _data = encode(verifiedCities, level, gamePoints, cityCommittedTo, name, roleAttestation);
+    bytes memory _data = encode(citizenId, verifiedCities, level, gamePoints, cityCommittedTo, name, roleAttestation);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
@@ -519,6 +558,7 @@ library Citizens {
   function set(address citizen, CitizensData memory _table) internal {
     set(
       citizen,
+      _table.citizenId,
       _table.verifiedCities,
       _table.level,
       _table.gamePoints,
@@ -533,6 +573,7 @@ library Citizens {
     set(
       _store,
       citizen,
+      _table.citizenId,
       _table.verifiedCities,
       _table.level,
       _table.gamePoints,
@@ -544,22 +585,24 @@ library Citizens {
 
   /** Decode the tightly packed blob using this table's schema */
   function decode(bytes memory _blob) internal view returns (CitizensData memory _table) {
-    // 128 is the total byte length of static data
-    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 128));
+    // 160 is the total byte length of static data
+    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 160));
 
-    _table.verifiedCities = (uint256(Bytes.slice32(_blob, 0)));
+    _table.citizenId = (uint256(Bytes.slice32(_blob, 0)));
 
-    _table.level = (uint256(Bytes.slice32(_blob, 32)));
+    _table.verifiedCities = (uint256(Bytes.slice32(_blob, 32)));
 
-    _table.gamePoints = (uint256(Bytes.slice32(_blob, 64)));
+    _table.level = (uint256(Bytes.slice32(_blob, 64)));
 
-    _table.cityCommittedTo = (uint256(Bytes.slice32(_blob, 96)));
+    _table.gamePoints = (uint256(Bytes.slice32(_blob, 96)));
+
+    _table.cityCommittedTo = (uint256(Bytes.slice32(_blob, 128)));
 
     // Store trims the blob if dynamic fields are all empty
-    if (_blob.length > 128) {
+    if (_blob.length > 160) {
       uint256 _start;
       // skip static data length + dynamic lengths word
-      uint256 _end = 160;
+      uint256 _end = 192;
 
       _start = _end;
       _end += _encodedLengths.atIndex(0);
@@ -573,6 +616,7 @@ library Citizens {
 
   /** Tightly pack full data using this table's schema */
   function encode(
+    uint256 citizenId,
     uint256 verifiedCities,
     uint256 level,
     uint256 gamePoints,
@@ -587,6 +631,7 @@ library Citizens {
 
     return
       abi.encodePacked(
+        citizenId,
         verifiedCities,
         level,
         gamePoints,

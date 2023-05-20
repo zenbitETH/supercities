@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { System } from "@latticexyz/world/src/System.sol";
-import { Citizens } from "../codegen/Tables.sol";
+import { Citizens, CitizensCounter } from "../codegen/Tables.sol";
 
 contract CitizensSystem is System {
   error InvalidCitizen();
@@ -33,7 +33,8 @@ contract CitizensSystem is System {
     if (_gamePoints != 0) revert InvalidGamePoints();
     if (_cityCommittedTo != 0) revert InvalidCityCommittedTo();
 
-    Citizen.set(_citizen, _verifiedCities, _level, _gamePoints, _cityCommittedTo, _name, _roleAttestation);
+    uint256 citizenId = incrementCitizensCounter();
+    Citizens.set(_citizen, citizenId, _verifiedCities, _level, _gamePoints, _cityCommittedTo, _name, _roleAttestation);
   }
 
   function verifyCity(address _citizen, uint256 _cityId) public {
@@ -53,25 +54,25 @@ contract CitizensSystem is System {
   function commitToCity(address _citizen, uint256 _cityId) public {
     if (_msgSender() != _citizen) revert InvalidCitizen();
     // Level 0 citizens cannot change their committed city
-    uint256 cityCommittedTo = Citizen.getCityCommittedTo(_citizen);
-    uint256 level = Citizen.getLevel(_citizen);
+    uint256 cityCommittedTo = Citizens.getCityCommittedTo(_citizen);
+    uint256 level = Citizens.getLevel(_citizen);
     if (cityCommittedTo != 0 && level == 0) revert CannotCommitToCity();
 
-    Citizen.setCityCommittedTo(_citizen, _cityId);
+    Citizens.setCityCommittedTo(_citizen, _cityId);
     incrementGamePoints(_citizen);
   }
 
   function claimReward(address _citizen) public {
     if (_msgSender() != _citizen) revert InvalidCitizen();
 
-    uint256 level = Citizen.getLevel(_citizen);
+    uint256 level = Citizens.getLevel(_citizen);
     if (level == 0) revert CannotClaimReward();
     
     // Check citizen token balance
     // Transfer tokens to citizen
     // Check that user balance increased by at least the number of tokens due to them
 
-    Citizen.setGamePoints(_citizen, 0);
+    Citizens.setGamePoints(_citizen, 0);
   }
 
 
@@ -79,14 +80,21 @@ contract CitizensSystem is System {
   //             Internal               //
   // ---------------------------------- //
   function incrementGamePoints(address _citizen) internal {
-    uint256 gamePoints = Citizen.getGamePoints(_citizen);
+    uint256 gamePoints = Citizens.getGamePoints(_citizen);
     uint256 newGamePoints = gamePoints++;
-    Citizen.setGamePoints(_citizen, newGamePoints);
+    Citizens.setGamePoints(_citizen, newGamePoints);
   }
 
   function incrementVerifiedCities(address _citizen) internal {
-    uint256 verifiedCities = Citizen.getVerifiedCities(_citizen);
+    uint256 verifiedCities = Citizens.getVerifiedCities(_citizen);
     uint256 newVerifiedCities = verifiedCities++;
-    Citizen.setVerifiedCities(_citizen, newVerifiedCities);
+    Citizens.setVerifiedCities(_citizen, newVerifiedCities);
+  }
+
+  function incrementCitizensCounter() public returns (uint256) {
+    uint256 counter = CitizensCounter.get();
+    uint256 newValue = counter + 1;
+    CitizensCounter.set(newValue);
+    return newValue;
   }
 }

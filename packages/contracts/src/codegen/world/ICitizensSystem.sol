@@ -29,4 +29,6 @@ interface ICitizensSystem {
   function commitToCity(address _citizen, uint256 _cityId) external;
 
   function claimReward(address _citizen) external;
+
+  function incrementCitizensCounter() external returns (uint256);
 }
