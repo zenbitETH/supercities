@@ -9,20 +9,8 @@ interface ICitizensSystem {
   error CityAlreadyVerified();
   error CannotCommitToCity();
   error CannotClaimReward();
-  error InvalidVerifiedCities();
-  error InvalidLevel();
-  error InvalidGamePoints();
-  error InvalidCityCommittedTo();
 
-  function addCitizen(
-    address _citizen,
-    uint256 _verifiedCities,
-    uint256 _level,
-    uint256 _gamePoints,
-    uint256 _cityCommittedTo,
-    string memory _name,
-    string memory _roleAttestation
-  ) external;
+  function addCitizen(string memory _name, string memory _roleAttestation) external;
 
   function verifyCity(address _citizen, uint256 _cityId) external;
 

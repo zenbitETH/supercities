@@ -63,7 +63,8 @@ contract CitiesSystem is System {
     uint256 currentCityId = CitiesCounter.get();
     uint256 newCityId = currentCityId++;
     address proposer = Proposals.getCitizen(_proposalId);
-    Cities.set(newCityId, proposer, city, country, []);
+    address[] memory committedCities = new address[](0);
+    Cities.set(newCityId, proposer, city, country, committedCities);
 
     CitiesCounter.set(newCityId);
     Cities.pushCommittedCitizens(_proposalId, proposer);

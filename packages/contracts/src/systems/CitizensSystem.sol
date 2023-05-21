@@ -10,31 +10,20 @@ contract CitizensSystem is System {
   error CityAlreadyVerified();
   error CannotCommitToCity();
   error CannotClaimReward();
-  error InvalidVerifiedCities();
-  error InvalidLevel();
-  error InvalidGamePoints();
-  error InvalidCityCommittedTo();
+
 
   // ---------------------------------- //
   //             Public                 //
   // ---------------------------------- //
   function addCitizen(
-    address _citizen,
-    uint256 _verifiedCities,
-    uint256 _level,
-    uint256 _gamePoints,
-    uint256 _cityCommittedTo,
     string memory _name,
     string memory _roleAttestation
   ) public {
     if (_msgSender() != address(0)) revert CitizenAlreadyExists();
-    if (_verifiedCities != 0) revert InvalidVerifiedCities();
-    if (_level != 0) revert InvalidLevel();
-    if (_gamePoints != 0) revert InvalidGamePoints();
-    if (_cityCommittedTo != 0) revert InvalidCityCommittedTo();
 
     uint256 citizenId = incrementCitizensCounter();
-    Citizens.set(_citizen, citizenId, _verifiedCities, _level, _gamePoints, _cityCommittedTo, _name, _roleAttestation, []);
+    uint256[] memory proposedCities = new uint256[](0);
+    Citizens.set(_msgSender(), citizenId, 0, 0, 0, 0, _name, _roleAttestation, proposedCities);
   }
 
   function verifyCity(address _citizen, uint256 _cityId) public {
