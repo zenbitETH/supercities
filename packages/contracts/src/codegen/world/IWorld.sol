@@ -7,11 +7,12 @@ import { IBaseWorld } from "@latticexyz/world/src/interfaces/IBaseWorld.sol";
 
 import { ICitiesSystem } from "./ICitiesSystem.sol";
 import { ICitizensSystem } from "./ICitizensSystem.sol";
+import { ISupercitiesSystem } from "./ISupercitiesSystem.sol";
 
 /**
  * The IWorld interface includes all systems dynamically added to the World
  * during the deploy process.
  */
-interface IWorld is IBaseWorld, ICitiesSystem, ICitizensSystem {
+interface IWorld is IBaseWorld, ICitiesSystem, ICitizensSystem, ISupercitiesSystem {
 
 }

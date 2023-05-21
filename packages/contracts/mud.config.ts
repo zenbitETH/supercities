@@ -3,6 +3,12 @@ import "@latticexyz/world/snapsync";
 
 export default mudConfig({
   snapSync: true,
+  systems: {
+    SupercitiesSystem: {
+      name: "supercities",
+      openAccess: true
+    },
+  },
   tables: {
     Citizens: {
       schema: {
@@ -63,6 +69,9 @@ export default mudConfig({
       keySchema: {
         cityId: "uint256"
       }
-    }
+    },
+    SupercitiesTokenTable: {
+      schema: "address"
+    },
   },
 });
