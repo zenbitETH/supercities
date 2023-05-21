@@ -1,3 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Iceland&family=Nabla&family=Nova+Square&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+
+.player-hud {
+    @apply
+    grid grid-cols-2 absolute left-2 items-center absolute pt-14 gap-x-3 text-xl text-left
+}
+
+.points-hud {
+    @apply
+    grid grid-cols-3 absolute right-2 items-center absolute pt-14 
+}
+
+.points {
+    @apply 
+    grid items-center pr-3 bg-gradient-to-r from-white/0 to-bit rounded-full h-full
+}
+
+.player {
+    @apply  
+    grid rounded-full items-center h-full 
+}
+
+.file-upload, .file-upload2 {
+    @apply
+    block w-full text-2xl text-slate-500
+    file:mr-4 file:py-2 file:px-4
+    file:rounded-full 
+    file:text-lg file:font-semibold
+    file:border-2 file:border-white/75 file:border-b-white file:border-r-white
+    file:bg-white/0 file:text-white
+    hover:file:bg-zen font-ice file:cursor-pointer cursor-pointer hover:file:text-bgd animate-pulse
+}
+
+.file-upload2 {
+    @apply
+    hover:file:bg-bit hover:file:text-white
+}
