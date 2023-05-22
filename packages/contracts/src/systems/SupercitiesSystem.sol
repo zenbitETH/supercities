@@ -5,7 +5,6 @@ import { ERC20 } from "../../node_modules/@openzeppelin/contracts/token/ERC20/ER
 
 import { System } from "@latticexyz/world/src/System.sol";
 import { SupercitiesTokenTable } from "../codegen/Tables.sol";
-
 import { SupercitiesToken } from "../SupercitiesToken.sol";
 
 bytes32 constant SingletonKey = bytes32(uint256(0x060D));
