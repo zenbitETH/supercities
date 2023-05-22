@@ -1,10 +1,17 @@
+import photo from '../public/profile.png'
+
 export function Header() {
     return (
         <div className="fixed top-3 z-10 w-full flex items-center text-center relative font-nova text-xl text-white">
             <div className="player-hud">
-                <div className="player bg-gradient-to-l from-white/0 to-zen/70  px-3">
-                    <div>Name/Address</div>
-                    <div>Level 0</div>
+                <div className="player bg-gradient-to-l from-white/0 to-zen  grid-cols-3 grid">
+                    <div className="h-16 w-16 rounded-full">
+                        <img src={photo} className='rounded-full' />
+                    </div>
+                    <div className="col-span-2 pl-1">
+                        <div>Name/Address</div>
+                        <div>Level 0</div>
+                    </div>
                 </div>
                 <div className="player hover:bg-zen hover:text-bgd cursor-pointer border-2 px-3">Commit to city</div>
             </div>
