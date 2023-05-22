@@ -9,14 +9,14 @@ interface ICitizensSystem {
   error CityAlreadyVerified();
   error CannotCommitToCity();
   error CannotClaimReward();
+  error CitizenAlreadyVerifiedCity();
+  error UnregisteredCitizen();
 
-  function addCitizen(string memory _name, string memory _roleAttestation) external;
+  function addCitizen(string memory _name) external;
 
-  function verifyCity(address _citizen, uint256 _cityId) external;
+  function verifyCity(uint256 _cityId) external;
 
-  function commitToCity(address _citizen, uint256 _cityId) external;
+  function commitToCity(uint256 _cityId) external;
 
   function claimReward(address _citizen) external;
-
-  function incrementCitizensCounter() external returns (uint256);
 }

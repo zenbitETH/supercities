@@ -18,7 +18,8 @@ contract SupercitiesSystem is System {
   }
 
   function mintTokens(address _citizen, uint256 _amount) public {
-    address supercitiesAddress = retrieveAddress();
+    bytes32 key = SingletonKey;
+    address supercitiesAddress = SupercitiesTokenTable.get(key);
     address SupercitiesTokenCaller = SupercitiesToken(supercitiesAddress).mint(_citizen, _amount);
     console.log("SupercitiesSystem caller: ", msg.sender);
     console.log("SupercitiesToken caller: ", SupercitiesTokenCaller);

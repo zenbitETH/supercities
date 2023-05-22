@@ -10,4 +10,5 @@ import { ProposalCounter, ProposalCounterTableId } from "./tables/ProposalCounte
 import { CitiesCounter, CitiesCounterTableId } from "./tables/CitiesCounter.sol";
 import { Voting, VotingTableId } from "./tables/Voting.sol";
 import { Cities, CitiesData, CitiesTableId } from "./tables/Cities.sol";
+import { VerifiedCities, VerifiedCitiesTableId } from "./tables/VerifiedCities.sol";
 import { SupercitiesTokenTable, SupercitiesTokenTableTableId } from "./tables/SupercitiesTokenTable.sol";

@@ -60,7 +60,7 @@ export default mudConfig({
       }
     },
     Cities: {
-      schema :{
+      schema:{
         proposer: "address",
         city: "string",
         country: "string",
@@ -68,6 +68,15 @@ export default mudConfig({
       },
       keySchema: {
         cityId: "uint256"
+      }
+    },
+    VerifiedCities: {
+      schema: {
+        isVerified: "bool"
+      },
+      keySchema: {
+        cityId: "uint256",
+        citizen: "address"
       }
     },
     SupercitiesTokenTable: {
