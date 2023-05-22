@@ -24,17 +24,15 @@ struct CitiesData {
   address proposer;
   string city;
   string country;
-  address[] committedCitizens;
 }
 
 library Cities {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](4);
+    SchemaType[] memory _schema = new SchemaType[](3);
     _schema[0] = SchemaType.ADDRESS;
     _schema[1] = SchemaType.STRING;
     _schema[2] = SchemaType.STRING;
-    _schema[3] = SchemaType.ADDRESS_ARRAY;
 
     return SchemaLib.encode(_schema);
   }
@@ -48,11 +46,10 @@ library Cities {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](4);
+    string[] memory _fieldNames = new string[](3);
     _fieldNames[0] = "proposer";
     _fieldNames[1] = "city";
     _fieldNames[2] = "country";
-    _fieldNames[3] = "committedCitizens";
     return ("Cities", _fieldNames);
   }
 
@@ -348,127 +345,6 @@ library Cities {
     _store.updateInField(_tableId, _keyTuple, 2, _index * 1, bytes((_slice)));
   }
 
-  /** Get committedCitizens */
-  function getCommittedCitizens(uint256 cityId) internal view returns (address[] memory committedCitizens) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_address());
-  }
-
-  /** Get committedCitizens (using the specified store) */
-  function getCommittedCitizens(
-    IStore _store,
-    uint256 cityId
-  ) internal view returns (address[] memory committedCitizens) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_address());
-  }
-
-  /** Set committedCitizens */
-  function setCommittedCitizens(uint256 cityId, address[] memory committedCitizens) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    StoreSwitch.setField(_tableId, _keyTuple, 3, EncodeArray.encode((committedCitizens)));
-  }
-
-  /** Set committedCitizens (using the specified store) */
-  function setCommittedCitizens(IStore _store, uint256 cityId, address[] memory committedCitizens) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    _store.setField(_tableId, _keyTuple, 3, EncodeArray.encode((committedCitizens)));
-  }
-
-  /** Get the length of committedCitizens */
-  function lengthCommittedCitizens(uint256 cityId) internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 3, getSchema());
-    return _byteLength / 20;
-  }
-
-  /** Get the length of committedCitizens (using the specified store) */
-  function lengthCommittedCitizens(IStore _store, uint256 cityId) internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 3, getSchema());
-    return _byteLength / 20;
-  }
-
-  /** Get an item of committedCitizens (unchecked, returns invalid data if index overflows) */
-  function getItemCommittedCitizens(uint256 cityId, uint256 _index) internal view returns (address) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 3, getSchema(), _index * 20, (_index + 1) * 20);
-    return (address(Bytes.slice20(_blob, 0)));
-  }
-
-  /** Get an item of committedCitizens (using the specified store) (unchecked, returns invalid data if index overflows) */
-  function getItemCommittedCitizens(IStore _store, uint256 cityId, uint256 _index) internal view returns (address) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 3, getSchema(), _index * 20, (_index + 1) * 20);
-    return (address(Bytes.slice20(_blob, 0)));
-  }
-
-  /** Push an element to committedCitizens */
-  function pushCommittedCitizens(uint256 cityId, address _element) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    StoreSwitch.pushToField(_tableId, _keyTuple, 3, abi.encodePacked((_element)));
-  }
-
-  /** Push an element to committedCitizens (using the specified store) */
-  function pushCommittedCitizens(IStore _store, uint256 cityId, address _element) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    _store.pushToField(_tableId, _keyTuple, 3, abi.encodePacked((_element)));
-  }
-
-  /** Pop an element from committedCitizens */
-  function popCommittedCitizens(uint256 cityId) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    StoreSwitch.popFromField(_tableId, _keyTuple, 3, 20);
-  }
-
-  /** Pop an element from committedCitizens (using the specified store) */
-  function popCommittedCitizens(IStore _store, uint256 cityId) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    _store.popFromField(_tableId, _keyTuple, 3, 20);
-  }
-
-  /** Update an element of committedCitizens at `_index` */
-  function updateCommittedCitizens(uint256 cityId, uint256 _index, address _element) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    StoreSwitch.updateInField(_tableId, _keyTuple, 3, _index * 20, abi.encodePacked((_element)));
-  }
-
-  /** Update an element of committedCitizens (using the specified store) at `_index` */
-  function updateCommittedCitizens(IStore _store, uint256 cityId, uint256 _index, address _element) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256((cityId)));
-
-    _store.updateInField(_tableId, _keyTuple, 3, _index * 20, abi.encodePacked((_element)));
-  }
-
   /** Get the full data */
   function get(uint256 cityId) internal view returns (CitiesData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -488,14 +364,8 @@ library Cities {
   }
 
   /** Set the full data using individual values */
-  function set(
-    uint256 cityId,
-    address proposer,
-    string memory city,
-    string memory country,
-    address[] memory committedCitizens
-  ) internal {
-    bytes memory _data = encode(proposer, city, country, committedCitizens);
+  function set(uint256 cityId, address proposer, string memory city, string memory country) internal {
+    bytes memory _data = encode(proposer, city, country);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
@@ -504,15 +374,8 @@ library Cities {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(
-    IStore _store,
-    uint256 cityId,
-    address proposer,
-    string memory city,
-    string memory country,
-    address[] memory committedCitizens
-  ) internal {
-    bytes memory _data = encode(proposer, city, country, committedCitizens);
+  function set(IStore _store, uint256 cityId, address proposer, string memory city, string memory country) internal {
+    bytes memory _data = encode(proposer, city, country);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256((cityId)));
@@ -522,12 +385,12 @@ library Cities {
 
   /** Set the full data using the data struct */
   function set(uint256 cityId, CitiesData memory _table) internal {
-    set(cityId, _table.proposer, _table.city, _table.country, _table.committedCitizens);
+    set(cityId, _table.proposer, _table.city, _table.country);
   }
 
   /** Set the full data using the data struct (using the specified store) */
   function set(IStore _store, uint256 cityId, CitiesData memory _table) internal {
-    set(_store, cityId, _table.proposer, _table.city, _table.country, _table.committedCitizens);
+    set(_store, cityId, _table.proposer, _table.city, _table.country);
   }
 
   /** Decode the tightly packed blob using this table's schema */
@@ -550,34 +413,17 @@ library Cities {
       _start = _end;
       _end += _encodedLengths.atIndex(1);
       _table.country = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
-
-      _start = _end;
-      _end += _encodedLengths.atIndex(2);
-      _table.committedCitizens = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_address());
     }
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(
-    address proposer,
-    string memory city,
-    string memory country,
-    address[] memory committedCitizens
-  ) internal view returns (bytes memory) {
-    uint40[] memory _counters = new uint40[](3);
+  function encode(address proposer, string memory city, string memory country) internal view returns (bytes memory) {
+    uint40[] memory _counters = new uint40[](2);
     _counters[0] = uint40(bytes(city).length);
     _counters[1] = uint40(bytes(country).length);
-    _counters[2] = uint40(committedCitizens.length * 20);
     PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);
 
-    return
-      abi.encodePacked(
-        proposer,
-        _encodedLengths.unwrap(),
-        bytes((city)),
-        bytes((country)),
-        EncodeArray.encode((committedCitizens))
-      );
+    return abi.encodePacked(proposer, _encodedLengths.unwrap(), bytes((city)), bytes((country)));
   }
 
   /** Encode keys as a bytes32 array using this table's schema */

@@ -4,6 +4,14 @@ import "@latticexyz/world/snapsync";
 export default mudConfig({
   snapSync: true,
   systems: {
+    CitiesSystem: {
+      name: "cities",
+      openAccess: true
+    },
+    CitizensSystem: {
+      name: "citizens",
+      openAccess: true
+    },
     SupercitiesSystem: {
       name: "supercities",
       openAccess: true
@@ -19,7 +27,7 @@ export default mudConfig({
         cityCommittedTo: "uint256",
         name: "string",
         roleAttestation: "string",
-        proposedCites: "uint256[]"
+        addedCites: "uint256[]"
       },
       keySchema: {
         citizen: "address",
@@ -63,8 +71,7 @@ export default mudConfig({
       schema:{
         proposer: "address",
         city: "string",
-        country: "string",
-        committedCitizens: "address[]"
+        country: "string"
       },
       keySchema: {
         cityId: "uint256"

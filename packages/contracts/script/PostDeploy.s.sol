@@ -7,10 +7,7 @@ import { IWorld } from "../src/codegen/world/IWorld.sol";
 import { ERC20 } from "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { IERC20 } from "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { SupercitiesToken } from "../src/SupercitiesToken.sol";
-
-import { SupercitiesSystem } from "../src/systems/SupercitiesSystem.sol";
 import { SupercitiesTokenTable } from "../src/codegen/Tables.sol";
-
 
 
 contract PostDeploy is Script {
@@ -26,20 +23,11 @@ contract PostDeploy is Script {
     console.log("worldAddress: ", address(worldAddress));
 
     address scAddress = address(supercitiesToken);
-
     IWorld(worldAddress).setAddress(scAddress);
     address supercitiesAddress = IWorld(worldAddress).retrieveAddress();
     console.log("retrieved address:", supercitiesAddress);
 
 
-    string memory name = IWorld(worldAddress).retrieveName();
-    console.log("name: ", name);
-
-
-    IWorld(worldAddress).mintTokens(worldAddress, 1*10**18);
-
-    uint256 balance = SupercitiesToken(scAddress).balanceOf(worldAddress);
-    console.log("balance: ", balance);
 
 
     vm.stopBroadcast();
