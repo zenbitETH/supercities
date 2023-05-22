@@ -12,10 +12,10 @@ contract CitizensSystem is System {
   error InvalidCitizen();
   error CitizenAlreadyExists();
   error CityAlreadyVerified();
-  error CannotCommitToCity();
   error CannotClaimReward();
   error CitizenAlreadyVerifiedCity();
-  error UnregisteredCitizen();
+  error NonregisteredAddress();
+  error CannotChangeCityCommitment();
 
   // ---------------------------------- //
   //             Public                 //
@@ -23,7 +23,7 @@ contract CitizensSystem is System {
   function addCitizen(
     string memory _name
   ) public {
-    if (_msgSender() != address(0)) revert CitizenAlreadyExists();
+    if (Citizens.getCitizenId(_msgSender()) != 0) revert CitizenAlreadyExists();
 
     uint256 citizenId = _incrementCitizensCounter();
     uint256[] memory proposedCities = new uint256[](0);
@@ -32,36 +32,52 @@ contract CitizensSystem is System {
 
   function verifyCity(uint256 _cityId) public {
     if (VerifiedCities.get(_cityId, _msgSender())) revert CitizenAlreadyVerifiedCity();
-    if (Citizens.getCitizenId(_msgSender()) < 1) revert UnregisteredCitizen();
+    if (Citizens.getCitizenId(_msgSender()) == 0) revert NonregisteredAddress();
 
     _incrementGamePoints(_msgSender());
-    _incrementVerifiedCities(_msgSender());
+    uint256 gamePoints = Citizens.getGamePoints(_msgSender());
+    if (gamePoints >= 6 
+      && Citizens.getCityCommittedTo(_msgSender()) > 0
+      && Citizens.getLevel(_msgSender()) == 0) {
+      Citizens.setLevel(_msgSender(), 1);
+    }
 
+    _incrementVerifiedCities(_msgSender());
     VerifiedCities.set(_cityId, _msgSender(), true);
   }
 
   function commitToCity(uint256 _cityId) public {
-    if (Citizens.getCitizenId(_msgSender()) < 1) revert UnregisteredCitizen();
-    // Level 0 citizens cannot change their committed city
-    uint256 cityCommittedTo = Citizens.getCityCommittedTo(_msgSender());
-    uint256 level = Citizens.getLevel(_msgSender());
-    if (cityCommittedTo != 0 && level == 0) revert CannotCommitToCity();
+    if (Citizens.getCitizenId(_msgSender()) == 0) revert NonregisteredAddress();
 
     _incrementGamePoints(_msgSender());
-    Citizens.setCityCommittedTo(_msgSender(), _cityId);
+    uint256 gamePoints = Citizens.getGamePoints(_msgSender());
+
+    if (Citizens.getCityCommittedTo(_msgSender()) == 0) {
+      Citizens.setCityCommittedTo(_msgSender(), _cityId);
+      if (gamePoints >= 6 && Citizens.getLevel(_msgSender()) == 0) {
+        Citizens.setLevel(_msgSender(), 1);
+      }
+      return;
+    }
+
+    // Level 0 citizens cannot change their committed city
+    uint256 level = Citizens.getLevel(_msgSender());
+    if (level > 0) {
+      Citizens.setCityCommittedTo(_msgSender(), _cityId);
+    } else revert CannotChangeCityCommitment();
   }
 
-  function claimReward(address _citizen) public {
-    if (_msgSender() != _citizen) revert InvalidCitizen();
 
-    uint256 level = Citizens.getLevel(_citizen);
+  function claimReward() public {
+    if (Citizens.getCitizenId(_msgSender()) == 0) revert NonregisteredAddress();
+
+    uint256 level = Citizens.getLevel(_msgSender());
     if (level == 0) revert CannotClaimReward();
     
-    // Check citizen token balance
-    // Transfer tokens to citizen
-    // Check that user balance increased by at least the number of tokens due to them
+    uint256 tokenAmount = Citizens.getGamePoints(_msgSender());
+    Citizens.setGamePoints(_msgSender(), 0);
 
-    Citizens.setGamePoints(_citizen, 0);
+    _mintTokens(_msgSender(), tokenAmount*10**18);
   }
 
 

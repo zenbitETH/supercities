@@ -7,10 +7,10 @@ interface ICitizensSystem {
   error InvalidCitizen();
   error CitizenAlreadyExists();
   error CityAlreadyVerified();
-  error CannotCommitToCity();
   error CannotClaimReward();
   error CitizenAlreadyVerifiedCity();
-  error UnregisteredCitizen();
+  error NonregisteredAddress();
+  error CannotChangeCityCommitment();
 
   function addCitizen(string memory _name) external;
 
@@ -18,5 +18,5 @@ interface ICitizensSystem {
 
   function commitToCity(uint256 _cityId) external;
 
-  function claimReward(address _citizen) external;
+  function claimReward() external;
 }
