@@ -87,13 +87,13 @@ contract CitizensSystem is System {
   // ---------------------------------- //
   function _incrementGamePoints(address _citizen) internal {
     uint256 gamePoints = Citizens.getGamePoints(_citizen);
-    uint256 newGamePoints = gamePoints++;
+    uint256 newGamePoints = gamePoints + 1;
     Citizens.setGamePoints(_citizen, newGamePoints);
   }
 
   function _incrementVerifiedCities(address _citizen) internal {
     uint256 verifiedCities = Citizens.getVerifiedCities(_citizen);
-    uint256 newVerifiedCities = verifiedCities++;
+    uint256 newVerifiedCities = verifiedCities + 1;
     Citizens.setVerifiedCities(_citizen, newVerifiedCities);
   }
 
