@@ -5,17 +5,146 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
-    Citizen: (() => {
-      const tableId = new TableId("", "Citizen");
+    Citizens: (() => {
+      const tableId = new TableId("", "Citizens");
       return defineComponent(
         world,
         {
-          name: RecsType.String,
+          citizenId: RecsType.BigInt,
           verifiedCities: RecsType.BigInt,
-          roleAttestation: RecsType.String,
           level: RecsType.BigInt,
           gamePoints: RecsType.BigInt,
           cityCommittedTo: RecsType.BigInt,
+          name: RecsType.String,
+          roleAttestation: RecsType.String,
+          addedCities: RecsType.BigIntArray,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    CitizensCounter: (() => {
+      const tableId = new TableId("", "CitizensCounter");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Proposals: (() => {
+      const tableId = new TableId("", "Proposals");
+      return defineComponent(
+        world,
+        {
+          citizen: RecsType.String,
+          proposalTime: RecsType.BigInt,
+          upvotes: RecsType.BigInt,
+          downvotes: RecsType.BigInt,
+          city: RecsType.String,
+          country: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    ProposalCounter: (() => {
+      const tableId = new TableId("", "ProposalCounter");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    CitiesCounter: (() => {
+      const tableId = new TableId("", "CitiesCounter");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Voting: (() => {
+      const tableId = new TableId("", "Voting");
+      return defineComponent(
+        world,
+        {
+          hasVoted: RecsType.Boolean,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Cities: (() => {
+      const tableId = new TableId("", "Cities");
+      return defineComponent(
+        world,
+        {
+          proposer: RecsType.String,
+          city: RecsType.String,
+          country: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    VerifiedCities: (() => {
+      const tableId = new TableId("", "VerifiedCities");
+      return defineComponent(
+        world,
+        {
+          isVerified: RecsType.Boolean,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    SupercitiesTokenTable: (() => {
+      const tableId = new TableId("", "SupercitiesToken");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.String,
         },
         {
           metadata: {
