@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 import { MudV2Test } from "@latticexyz/std-contracts/src/test/MudV2Test.t.sol";
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 
-import { Cities, Citizens } from "../src/codegen/Tables.sol";
+import { Cities, Citizens, Proposals } from "../src/codegen/Tables.sol";
  
 contract CitiesSystemTest is MudV2Test {
   IWorld world;
@@ -24,10 +24,16 @@ contract CitiesSystemTest is MudV2Test {
     string memory city = Cities.getCity(world, 1);
     // assertEq(city, "testCity");
     // Not retrieving data--why?
-    console.log(city);
+    // console.log(city);
   }
 
-  
+    function testUpvote() public {
+    world.addCitizen("testName");
+    world.proposeCity("testCity", "testCountry");
+    world.upvote(1);
+    uint256 upvotes = Proposals.getUpvotes(world, 1);
+    console.log(upvotes);
+  }
 
 
 }

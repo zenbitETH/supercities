@@ -31,10 +31,13 @@ contract CitiesSystem is System {
     if (Voting.get(_proposalId, _msgSender())) revert AlreadyVoted();
 
     uint256 upvotes = Proposals.getUpvotes(_proposalId);
-    uint256 newUpvotes = upvotes++;
+    console.log("up before: ", upvotes);
+    uint256 newUpvotes = upvotes + 1;
     Proposals.setUpvotes(_proposalId, newUpvotes);
     // Prevent the same citizen from voting on the same proposal twice
     Voting.set(_proposalId, _msgSender(), true);
+    uint256 up = Proposals.getUpvotes(1);
+    console.log("up after: ", up);
   }
 
   function downvote(uint256 _proposalId) public {
@@ -42,7 +45,7 @@ contract CitiesSystem is System {
     if (Voting.get(_proposalId, _msgSender())) revert AlreadyVoted();
 
     uint256 downvotes = Proposals.getDownvotes(_proposalId);
-    uint256 newDownvotes = downvotes++;
+    uint256 newDownvotes = downvotes + 1;
     Proposals.setDownvotes(_proposalId, newDownvotes);
     // Prevent the same citizen from voting on the same proposal twice
     Voting.set(_proposalId, _msgSender(), true);
