@@ -8,12 +8,12 @@ export function Header() {
                     <div className="h-16 w-16 rounded-full">
                         <img src={photo} className='rounded-full' />
                     </div>
-                    <div className="col-span-2 pl-1">
+                    <div className="col-span-2 pr-3">
                         <div>Name/Address</div>
                         <div>Level 0</div>
                     </div>
                 </div>
-                <div className="player hover:bg-zen hover:text-bgd cursor-pointer border-2 px-3">Commit to city</div>
+                <div className="player hover:bg-zen hover:text-bgd cursor-pointer border-2 px-3 text-center">Commit to city</div>
             </div>
             <div className="points-hud gap-x-3">
                 <div className="points grid-cols-2 ">

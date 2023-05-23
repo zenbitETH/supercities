@@ -52,3 +52,9 @@
     @apply
     hover:file:bg-bit hover:file:text-white
 }
+
+.citydata {
+    @apply 
+    pt-1 rounded-full bg-gradient-to-r from-white/0 via-white/25 to-white/0
+    hover:via-bit cursor-pointer
+}
