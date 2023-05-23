@@ -23,7 +23,6 @@ contract CitiesSystem is System {
     // Check that proposer is a registered citizen
     if (Citizens.getCitizenId(_msgSender()) == 0) revert UnregisteredCitizen();
     uint256 proposalId = incrementProposalCounter();
-
     Proposals.set(proposalId, _msgSender(), block.timestamp, 0, 0, _city, _country);
   }
 
@@ -32,10 +31,11 @@ contract CitiesSystem is System {
     if (Voting.get(_proposalId, _msgSender())) revert AlreadyVoted();
 
     uint256 upvotes = Proposals.getUpvotes(_proposalId);
-    uint256 newUpvotes = upvotes++;
+    uint256 newUpvotes = upvotes + 1;
     Proposals.setUpvotes(_proposalId, newUpvotes);
     // Prevent the same citizen from voting on the same proposal twice
     Voting.set(_proposalId, _msgSender(), true);
+    uint256 up = Proposals.getUpvotes(1);
   }
 
   function downvote(uint256 _proposalId) public {
@@ -43,13 +43,13 @@ contract CitiesSystem is System {
     if (Voting.get(_proposalId, _msgSender())) revert AlreadyVoted();
 
     uint256 downvotes = Proposals.getDownvotes(_proposalId);
-    uint256 newDownvotes = downvotes++;
+    uint256 newDownvotes = downvotes + 1;
     Proposals.setDownvotes(_proposalId, newDownvotes);
     // Prevent the same citizen from voting on the same proposal twice
     Voting.set(_proposalId, _msgSender(), true);
   }
 
-
+  /// @notice FOR TESTING, ONLY ONE UPVOTE IS NEEDED.  THIS SHOULD BE SET TO 3 FOR PRODUCTION
   /// @notice Within 7 days of having been proposed, if a proposed city has more than 3 upvotes and if there are more upvotes than downvotes, then anyone can call this function to add the city to the Cities table.
   /// @notice Caller must pay gas, which includes minting tokens if the city is added successfully.
   function addCity(uint256 _proposalId) public {
@@ -58,20 +58,21 @@ contract CitiesSystem is System {
     if (block.timestamp > proposalTime + 604800) revert ExpiredVotingPeriod();
     // must have 3 upvotes
     uint256 upvotes = Proposals.getUpvotes(_proposalId);
-    if (upvotes < 3) revert InsufficientUpvotes();
+    if (upvotes < 1) revert InsufficientUpvotes();
     // must have more upvotes than downvotes
     uint256 downvotes = Proposals.getDownvotes(_proposalId);
     if (downvotes >= upvotes) revert DownvotesExceedUpvotes();
 
     string memory city = Proposals.getCity(_proposalId);
     string memory country = Proposals.getCountry(_proposalId);
-    uint256 currentCityId = CitiesCounter.get();
-    uint256 newCityId = currentCityId++;
+    bytes32 key = SingletonKey;
+    uint256 currentCityId = CitiesCounter.get(key);
+    uint256 newCityId = currentCityId + 1;
     address proposer = Proposals.getCitizen(_proposalId);
     Cities.set(newCityId, proposer, city, country);
 
-    CitiesCounter.set(newCityId);
-    Citizens.pushAddedCites(proposer, newCityId);
+    CitiesCounter.set(key, newCityId);
+    Citizens.pushAddedCities(proposer, newCityId);
     // Proposer gets rewarded with 1 token
     _mintTokens(proposer, 1*10**18);  
   }
@@ -81,9 +82,10 @@ contract CitiesSystem is System {
   //             Internal               //
   // ---------------------------------- //
   function incrementProposalCounter() internal returns (uint256) {
-    uint256 counter = ProposalCounter.get();
+    bytes32 key = SingletonKey;
+    uint256 counter = ProposalCounter.get(key);
     uint256 newValue = counter + 1;
-    ProposalCounter.set(newValue);
+    ProposalCounter.set(key, newValue);
     return newValue;
   }
 

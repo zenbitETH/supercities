@@ -20,13 +20,14 @@ contract CitizensSystem is System {
   // ---------------------------------- //
   //             Public                 //
   // ---------------------------------- //
+
   function addCitizen(
     string memory _name
   ) public {
     if (Citizens.getCitizenId(_msgSender()) != 0) revert CitizenAlreadyExists();
-
     uint256 citizenId = _incrementCitizensCounter();
     uint256[] memory proposedCities = new uint256[](0);
+    // console.log(_msgSender());
     Citizens.set(_msgSender(), citizenId, 0, 0, 0, 0, _name, "", proposedCities);
   }
 
@@ -97,9 +98,10 @@ contract CitizensSystem is System {
   }
 
   function _incrementCitizensCounter() internal returns (uint256) {
-    uint256 counter = CitizensCounter.get();
+    bytes32 key = SingletonKey;
+    uint256 counter = CitizensCounter.get(key);
     uint256 newValue = counter + 1;
-    CitizensCounter.set(newValue);
+    CitizensCounter.set(key, newValue);
     return newValue;
   }
 

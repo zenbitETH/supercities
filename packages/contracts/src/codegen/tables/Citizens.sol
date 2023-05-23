@@ -28,7 +28,7 @@ struct CitizensData {
   uint256 cityCommittedTo;
   string name;
   string roleAttestation;
-  uint256[] addedCites;
+  uint256[] addedCities;
 }
 
 library Citizens {
@@ -64,7 +64,7 @@ library Citizens {
     _fieldNames[4] = "cityCommittedTo";
     _fieldNames[5] = "name";
     _fieldNames[6] = "roleAttestation";
-    _fieldNames[7] = "addedCites";
+    _fieldNames[7] = "addedCities";
     return ("Citizens", _fieldNames);
   }
 
@@ -500,8 +500,8 @@ library Citizens {
     _store.updateInField(_tableId, _keyTuple, 6, _index * 1, bytes((_slice)));
   }
 
-  /** Get addedCites */
-  function getAddedCites(address citizen) internal view returns (uint256[] memory addedCites) {
+  /** Get addedCities */
+  function getAddedCities(address citizen) internal view returns (uint256[] memory addedCities) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
@@ -509,8 +509,8 @@ library Citizens {
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint256());
   }
 
-  /** Get addedCites (using the specified store) */
-  function getAddedCites(IStore _store, address citizen) internal view returns (uint256[] memory addedCites) {
+  /** Get addedCities (using the specified store) */
+  function getAddedCities(IStore _store, address citizen) internal view returns (uint256[] memory addedCities) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
@@ -518,24 +518,24 @@ library Citizens {
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint256());
   }
 
-  /** Set addedCites */
-  function setAddedCites(address citizen, uint256[] memory addedCites) internal {
+  /** Set addedCities */
+  function setAddedCities(address citizen, uint256[] memory addedCities) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 7, EncodeArray.encode((addedCites)));
+    StoreSwitch.setField(_tableId, _keyTuple, 7, EncodeArray.encode((addedCities)));
   }
 
-  /** Set addedCites (using the specified store) */
-  function setAddedCites(IStore _store, address citizen, uint256[] memory addedCites) internal {
+  /** Set addedCities (using the specified store) */
+  function setAddedCities(IStore _store, address citizen, uint256[] memory addedCities) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
-    _store.setField(_tableId, _keyTuple, 7, EncodeArray.encode((addedCites)));
+    _store.setField(_tableId, _keyTuple, 7, EncodeArray.encode((addedCities)));
   }
 
-  /** Get the length of addedCites */
-  function lengthAddedCites(address citizen) internal view returns (uint256) {
+  /** Get the length of addedCities */
+  function lengthAddedCities(address citizen) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
@@ -543,8 +543,8 @@ library Citizens {
     return _byteLength / 32;
   }
 
-  /** Get the length of addedCites (using the specified store) */
-  function lengthAddedCites(IStore _store, address citizen) internal view returns (uint256) {
+  /** Get the length of addedCities (using the specified store) */
+  function lengthAddedCities(IStore _store, address citizen) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
@@ -552,8 +552,8 @@ library Citizens {
     return _byteLength / 32;
   }
 
-  /** Get an item of addedCites (unchecked, returns invalid data if index overflows) */
-  function getItemAddedCites(address citizen, uint256 _index) internal view returns (uint256) {
+  /** Get an item of addedCities (unchecked, returns invalid data if index overflows) */
+  function getItemAddedCities(address citizen, uint256 _index) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
@@ -561,8 +561,8 @@ library Citizens {
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Get an item of addedCites (using the specified store) (unchecked, returns invalid data if index overflows) */
-  function getItemAddedCites(IStore _store, address citizen, uint256 _index) internal view returns (uint256) {
+  /** Get an item of addedCities (using the specified store) (unchecked, returns invalid data if index overflows) */
+  function getItemAddedCities(IStore _store, address citizen, uint256 _index) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
@@ -570,48 +570,48 @@ library Citizens {
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Push an element to addedCites */
-  function pushAddedCites(address citizen, uint256 _element) internal {
+  /** Push an element to addedCities */
+  function pushAddedCities(address citizen, uint256 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
     StoreSwitch.pushToField(_tableId, _keyTuple, 7, abi.encodePacked((_element)));
   }
 
-  /** Push an element to addedCites (using the specified store) */
-  function pushAddedCites(IStore _store, address citizen, uint256 _element) internal {
+  /** Push an element to addedCities (using the specified store) */
+  function pushAddedCities(IStore _store, address citizen, uint256 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
     _store.pushToField(_tableId, _keyTuple, 7, abi.encodePacked((_element)));
   }
 
-  /** Pop an element from addedCites */
-  function popAddedCites(address citizen) internal {
+  /** Pop an element from addedCities */
+  function popAddedCities(address citizen) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
     StoreSwitch.popFromField(_tableId, _keyTuple, 7, 32);
   }
 
-  /** Pop an element from addedCites (using the specified store) */
-  function popAddedCites(IStore _store, address citizen) internal {
+  /** Pop an element from addedCities (using the specified store) */
+  function popAddedCities(IStore _store, address citizen) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
     _store.popFromField(_tableId, _keyTuple, 7, 32);
   }
 
-  /** Update an element of addedCites at `_index` */
-  function updateAddedCites(address citizen, uint256 _index, uint256 _element) internal {
+  /** Update an element of addedCities at `_index` */
+  function updateAddedCities(address citizen, uint256 _index, uint256 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
     StoreSwitch.updateInField(_tableId, _keyTuple, 7, _index * 32, abi.encodePacked((_element)));
   }
 
-  /** Update an element of addedCites (using the specified store) at `_index` */
-  function updateAddedCites(IStore _store, address citizen, uint256 _index, uint256 _element) internal {
+  /** Update an element of addedCities (using the specified store) at `_index` */
+  function updateAddedCities(IStore _store, address citizen, uint256 _index, uint256 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(uint160((citizen))));
 
@@ -646,7 +646,7 @@ library Citizens {
     uint256 cityCommittedTo,
     string memory name,
     string memory roleAttestation,
-    uint256[] memory addedCites
+    uint256[] memory addedCities
   ) internal {
     bytes memory _data = encode(
       citizenId,
@@ -656,7 +656,7 @@ library Citizens {
       cityCommittedTo,
       name,
       roleAttestation,
-      addedCites
+      addedCities
     );
 
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -676,7 +676,7 @@ library Citizens {
     uint256 cityCommittedTo,
     string memory name,
     string memory roleAttestation,
-    uint256[] memory addedCites
+    uint256[] memory addedCities
   ) internal {
     bytes memory _data = encode(
       citizenId,
@@ -686,7 +686,7 @@ library Citizens {
       cityCommittedTo,
       name,
       roleAttestation,
-      addedCites
+      addedCities
     );
 
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -706,7 +706,7 @@ library Citizens {
       _table.cityCommittedTo,
       _table.name,
       _table.roleAttestation,
-      _table.addedCites
+      _table.addedCities
     );
   }
 
@@ -722,7 +722,7 @@ library Citizens {
       _table.cityCommittedTo,
       _table.name,
       _table.roleAttestation,
-      _table.addedCites
+      _table.addedCities
     );
   }
 
@@ -757,7 +757,7 @@ library Citizens {
 
       _start = _end;
       _end += _encodedLengths.atIndex(2);
-      _table.addedCites = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint256());
+      _table.addedCities = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint256());
     }
   }
 
@@ -770,12 +770,12 @@ library Citizens {
     uint256 cityCommittedTo,
     string memory name,
     string memory roleAttestation,
-    uint256[] memory addedCites
+    uint256[] memory addedCities
   ) internal view returns (bytes memory) {
     uint40[] memory _counters = new uint40[](3);
     _counters[0] = uint40(bytes(name).length);
     _counters[1] = uint40(bytes(roleAttestation).length);
-    _counters[2] = uint40(addedCites.length * 32);
+    _counters[2] = uint40(addedCities.length * 32);
     PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);
 
     return
@@ -788,7 +788,7 @@ library Citizens {
         _encodedLengths.unwrap(),
         bytes((name)),
         bytes((roleAttestation)),
-        EncodeArray.encode((addedCites))
+        EncodeArray.encode((addedCities))
       );
   }
 
