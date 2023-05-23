@@ -27,15 +27,19 @@ export default mudConfig({
         cityCommittedTo: "uint256",
         name: "string",
         roleAttestation: "string",
-        addedCites: "uint256[]"
+        addedCities: "uint256[]"
       },
       keySchema: {
         citizen: "address",
       }
     },
     CitizensCounter: {
-      schema: "uint256",
-      keySchema: {}
+      schema: {
+        value: "uint256"
+      },
+      keySchema: {
+        counterId: "bytes32"
+      }
     },
     Proposals: {
       schema: {
@@ -51,12 +55,20 @@ export default mudConfig({
       }
     },
     ProposalCounter: {
-      schema: "uint256",
-      keySchema: {}
+      schema: {
+        value: "uint256"
+      },
+      keySchema: {
+        counterId: "bytes32"
+      }
     },
     CitiesCounter: {
-      schema: "uint256",
-      keySchema: {}
+      schema: {
+        value: "uint256"
+      },
+      keySchema: {
+        counterId: "bytes32"
+      }
     },
     Voting: {
       schema: {

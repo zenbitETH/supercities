@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
  
+// pnpm mud test --forgeOptions="-vvv" 
 import { console } from "forge-std/console.sol";
 
 import "forge-std/Test.sol";
@@ -16,24 +17,11 @@ contract CitizensSystemTest is MudV2Test {
     super.setUp();
     world = IWorld(worldAddress);
   }
- 
-  // function testAddEntry() public {
-  //   // Add a new entry to the Dog via the system
-  //   // this will call the addEntry function on MySystem
-  //   bytes32 key = World.addEntry("bob", "blue");
-  //   // Expect the value retrieved from the Dog at the corresponding key to match "bob" and "blue"
-  //   string memory name = Dog.getName(world, key);
-  //   string memory color = Dog.getColor(world, key);
-  //   assertEq(name, "bob");
-  //   assertEq(color, "blue");
-  // }
 
-  // function testSetAddress() public {
-  //   world.setAddress(address(world));
-  //   address retrievedAddress = world.retrieveAddress();
-  //   console.log("retrievedAddress: ", retrievedAddress);
-  //   console.log("world address: ", address(world));
-  //   assertEq(retrievedAddress, address(world));
-  // }
-  
+  function testAddCitizen() public {
+    world.addCitizen("testName");
+    string memory name = Citizens.getName(world,0x7FA9385bE102ac3EAc297483Dd6233D62b3e1496);
+    // console.log(name);
+    assertEq(name, "testName");
+  }
 }

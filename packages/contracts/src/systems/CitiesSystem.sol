@@ -23,7 +23,6 @@ contract CitiesSystem is System {
     // Check that proposer is a registered citizen
     if (Citizens.getCitizenId(_msgSender()) == 0) revert UnregisteredCitizen();
     uint256 proposalId = incrementProposalCounter();
-
     Proposals.set(proposalId, _msgSender(), block.timestamp, 0, 0, _city, _country);
   }
 
@@ -65,13 +64,14 @@ contract CitiesSystem is System {
 
     string memory city = Proposals.getCity(_proposalId);
     string memory country = Proposals.getCountry(_proposalId);
-    uint256 currentCityId = CitiesCounter.get();
+    bytes32 key = SingletonKey;
+    uint256 currentCityId = CitiesCounter.get(key);
     uint256 newCityId = currentCityId++;
     address proposer = Proposals.getCitizen(_proposalId);
     Cities.set(newCityId, proposer, city, country);
 
-    CitiesCounter.set(newCityId);
-    Citizens.pushAddedCites(proposer, newCityId);
+    CitiesCounter.set(key, newCityId);
+    Citizens.pushAddedCities(proposer, newCityId);
     // Proposer gets rewarded with 1 token
     _mintTokens(proposer, 1*10**18);  
   }
@@ -81,9 +81,10 @@ contract CitiesSystem is System {
   //             Internal               //
   // ---------------------------------- //
   function incrementProposalCounter() internal returns (uint256) {
-    uint256 counter = ProposalCounter.get();
+    bytes32 key = SingletonKey;
+    uint256 counter = ProposalCounter.get(key);
     uint256 newValue = counter + 1;
-    ProposalCounter.set(newValue);
+    ProposalCounter.set(key, newValue);
     return newValue;
   }
 

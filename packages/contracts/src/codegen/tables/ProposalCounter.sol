@@ -30,7 +30,8 @@ library ProposalCounter {
   }
 
   function getKeySchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](0);
+    SchemaType[] memory _schema = new SchemaType[](1);
+    _schema[0] = SchemaType.BYTES32;
 
     return SchemaLib.encode(_schema);
   }
@@ -65,31 +66,35 @@ library ProposalCounter {
   }
 
   /** Get value */
-  function get() internal view returns (uint256 value) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function get(bytes32 counterId) internal view returns (uint256 value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((counterId));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
   /** Get value (using the specified store) */
-  function get(IStore _store) internal view returns (uint256 value) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function get(IStore _store, bytes32 counterId) internal view returns (uint256 value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((counterId));
 
     bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
   /** Set value */
-  function set(uint256 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function set(bytes32 counterId, uint256 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((counterId));
 
     StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((value)));
   }
 
   /** Set value (using the specified store) */
-  function set(IStore _store, uint256 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function set(IStore _store, bytes32 counterId, uint256 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((counterId));
 
     _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((value)));
   }
@@ -100,20 +105,23 @@ library ProposalCounter {
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
-  function encodeKeyTuple() internal pure returns (bytes32[] memory _keyTuple) {
-    _keyTuple = new bytes32[](0);
+  function encodeKeyTuple(bytes32 counterId) internal pure returns (bytes32[] memory _keyTuple) {
+    _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((counterId));
   }
 
   /* Delete all data for given keys */
-  function deleteRecord() internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function deleteRecord(bytes32 counterId) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((counterId));
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
 
   /* Delete all data for given keys (using the specified store) */
-  function deleteRecord(IStore _store) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function deleteRecord(IStore _store, bytes32 counterId) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((counterId));
 
     _store.deleteRecord(_tableId, _keyTuple);
   }
