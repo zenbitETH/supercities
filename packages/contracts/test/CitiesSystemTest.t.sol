@@ -27,13 +27,23 @@ contract CitiesSystemTest is MudV2Test {
     // console.log(city);
   }
 
-    function testUpvote() public {
+  function testUpvote() public {
     world.addCitizen("testName");
     world.proposeCity("testCity", "testCountry");
     world.upvote(1);
     uint256 upvotes = Proposals.getUpvotes(world, 1);
-    console.log(upvotes);
+    // console.log(upvotes);
   }
 
+  function testDownvote() public {
+    world.addCitizen("testName");
+    world.proposeCity("testCity", "testCountry");
+    world.downvote(1);
+    uint256 downvotes = Proposals.getDownvotes(world, 1);
+    // console.log(downvotes);
+  }
 
+  function addCity() public {
+    
+  }
 }
